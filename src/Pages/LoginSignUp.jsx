@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { auth } from '../firebase'; // adjust path if needed
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginSignUp = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
   // Handle input change
   const handleChange = (e) => {
@@ -11,18 +14,36 @@ const LoginSignUp = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    setMessage('');
+    setError('');
+
     if (!formData.email || !formData.password || (!isLogin && !formData.username)) {
-      setMessage('Please fill in all fields.');
+      setError('Please fill in all fields.');
       return;
     }
 
-    setMessage(isLogin ? 'Logged in successfully!' : 'Signed up successfully!');
-    
-    // Simulating user session
-    setTimeout(() => setMessage(''), 3000);
+    try {
+      if (isLogin) {
+        await signInWithEmailAndPassword(auth, formData.email, formData.password);
+        setMessage('Logged in successfully!');
+      } else {
+        await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+        setMessage('Signed up successfully!');
+        // Optionally store username in Firestore here
+      }
+
+      setFormData({ username: '', email: '', password: '' });
+    } catch (err) {
+      setError(err.message);
+    }
+
+    setTimeout(() => {
+      setMessage('');
+      setError('');
+    }, 4000);
   };
 
   return (
@@ -31,7 +52,7 @@ const LoginSignUp = () => {
         <h1 className="my-5 text-[24px] sm:text-[30px] font-medium text-center">
           {isLogin ? 'Login' : 'Sign Up'}
         </h1>
-        
+
         <form className="loginsignup-fields flex flex-col gap-5 mt-6" onSubmit={handleSubmit}>
           {!isLogin && (
             <input
@@ -67,20 +88,18 @@ const LoginSignUp = () => {
           </button>
         </form>
 
-        {message && (
-          <p className="mt-4 text-green-600 text-center font-medium">{message}</p>
-        )}
+        {message && <p className="mt-4 text-green-600 text-center font-medium">{message}</p>}
+        {error && <p className="mt-4 text-red-600 text-center font-medium">{error}</p>}
 
-        <p
-          className="loginsignup-login mt-5 text-gray-600 text-[14px] sm:text-[18px] font-medium text-center"
-        >
-          {isLogin ? "Don't have an account?" : 'Already have an account?'}{" "}
+        <p className="loginsignup-login mt-5 text-gray-600 text-[14px] sm:text-[18px] font-medium text-center">
+          {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
           <span
             className="text-[#ff4141] font-semibold cursor-pointer hover:underline"
             onClick={() => {
               setIsLogin(!isLogin);
               setFormData({ username: '', email: '', password: '' });
               setMessage('');
+              setError('');
             }}
           >
             {isLogin ? 'Sign Up here' : 'Login here'}

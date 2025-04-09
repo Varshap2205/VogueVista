@@ -58,7 +58,7 @@ const CartItems = () => {
                             <h3 className='text-[18px] md:text-[20px] font-[600]'>${getTotalCartAmount()}</h3>
                         </div>
                     </div>
-                    <button className='w-full md:w-[262px] h-[58px] outline-none border-none bg-[#ff5a5a] text-[#fff] text-[16px] font-[600] cursor-pointer'>PROCEED TO CHECKOUT</button>
+                    {/* <button className='w-full md:w-[262px] h-[58px] outline-none border-none bg-[#ff5a5a] text-[#fff] text-[16px] font-[600] cursor-pointer'>PROCEED TO CHECKOUT</button> */}
                 </div>
                 <div className="cartitems-promocode flex-1 text-[16px] font-[500] mt-[40px] md:mt-0">
                     <p className='text-[#555]'>If you have a promo code, enter it here</p>
