@@ -8,6 +8,7 @@ VogueVista is a React-based e-commerce application designed for a seamless shopp
 - **Shopping Cart Functionality**: Easily add and remove items from the cart.
 - **Product Display**: Attractive product listings with clear images and descriptions.
 - **Dynamic Cart Summary**: Total cart amount updates automatically as items are added or removed.
+- **Payment Integration**: Integrated Razorpay for a seamless and secure payment experience.
 
 ## Technologies Used
 
